@@ -14,6 +14,18 @@ const newExpense = ref({
 days.forEach(day => {
   expenses.value[day] = [];
 });
+
+//fungsi menambah jenis pengeluaran dan jumlah pengeluaran 
+function addExpense() {
+  if (!newExpense.value.text || newExpense.value.amount <= 0) return;
+  
+  expenses.value[selectedDay.value].push({
+    ...newExpense.value,
+    id: Date.now()
+  });
+
+}
+
 </script>
 
 <template>
