@@ -24,7 +24,24 @@ function addExpense() {
     id: Date.now()
   });
 
+  newExpense.value = { text: '', amount: 0, completed: false };
+  saveToLocalStorage();
 }
+
+function removeExpense(day, index) {
+  expenses.value[day].splice(index, 1);
+  saveToLocalStorage();
+}
+
+function filteredExpenses(day) {
+  const dayExpenses = expenses.value[day];
+  return filter.value === 'uncompleted' 
+    ? dayExpenses.filter(exp => !exp.completed)
+    : dayExpenses;
+}
+
+
+
 
 </script>
 
@@ -48,5 +65,26 @@ function addExpense() {
       >
       <button @click="addExpense">Tambah</button>
     </div>
+    <div class="filter-buttons">
+      <button @click="filter = 'all'" :class="{ active: filter === 'all' }">Semua</button>
+      <button @click="filter = 'uncompleted'" :class="{ active: filter === 'uncompleted' }">Belum Dibayar</button>
+    </div>
+
+    <div v-for="day in days" :key="day" class="day-section">
+      <h2>{{ day }}</h2>
+      <ul>
+        <li 
+          v-for="(expense, index) in filteredExpenses(day)" 
+          :key="index"
+          :class="{ completed: expense.completed }"
+        >
+          <input 
+            type="checkbox" 
+            v-model="expense.completed"
+            @change="saveToLocalStorage"
+          >
+        </li>
+      </ul>
+  </div>
   </div>
 </template>
